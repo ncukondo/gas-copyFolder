@@ -4,7 +4,7 @@
     <base target="_top">
   </head>
   <body>
-    <form>
+    <form id="form">
       <div>
         <label>コピー元<input type="text" value="<?= initialId ?>" name="src"></label>
       </div>
@@ -12,14 +12,17 @@
         <label>コピー先<input type="text" name="target"></label>
       </div>
       <button onclick="google.script.host.close();">cancel</button>
-      <button onclick="doCopyFolder(this.getparentNode());">copy</button>
+      <button onclick="doCopyFolder();">copy</button>
     </form>
-    function doCopyFolder(form) {
-      const src = form.src;
-      const target = form.target;
-      google.script.run.withSuccessHandler(function(){
-        google.script.host.close();
-      }).copyFolder(src, target);
-    }
+    <script>
+      function doCopyFolder() {
+        const form = document.getElementById("form");
+        const src = form.src.value;
+        const target = form.target.value;
+        google.script.run.withSuccessHandler(function(){
+          google.script.host.close();
+        }).copyFolder(src, target);
+      }
+    </script>
   </body>
 </html>
