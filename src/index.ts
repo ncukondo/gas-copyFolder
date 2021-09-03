@@ -3,6 +3,7 @@ import { copyFolder as doCopyFolder } from "./copyFolder";
 type Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
 declare const SpreadsheetApp: GoogleAppsScript.Spreadsheet.SpreadsheetApp;
 declare const HtmlService: GoogleAppsScript.HTML.HtmlService;
+declare const DriveApp: GoogleAppsScript.Drive.DriveApp;
 
 export function copyFolder(src: string, dist: string) {
   doCopyFolder(src, dist);
@@ -16,7 +17,12 @@ const showIdInputDialog = (initialId = "") => {
 };
 
 export function copyFolderByDialog() {
-  showIdInputDialog(SpreadsheetApp.getActiveSpreadsheet().getId());
+  const spreadsheetId = SpreadsheetApp.getActiveSpreadsheet().getId();
+  const folderId = DriveApp.getFileById(spreadsheetId)
+    .getParents()
+    .next()
+    .getId();
+  showIdInputDialog(folderId);
 }
 
 export function onOpen() {
