@@ -13,7 +13,8 @@
     "clasp-create": "npx clasp create",
     "clasp-list": "npx clasp list",
     "clasp-clone": "npx clasp clone",
-    "build": "yarn lint && rimraf dist && rollup -c && cpx src/appsscript.json dist && cpx js/* dist && cpx src/*.html dist",
+    "copy": "cpx src/appsscript.json dist && cpx js/* dist && cpx src/*.html dist",
+    "build": "yarn lint && rimraf dist && rollup -c && yarn copy",
     "deploy": "yarn build && npx clasp push"
   },
   "dependencies": {
