@@ -1,0 +1,26 @@
+{
+  "name": "${localWorkspaceFolderBasename}",
+  "context": "..",
+  "dockerFile": "dockerfile",
+  "workspaceFolder": "/usr/src/${localWorkspaceFolderBasename}",
+  "mounts": [
+    "source=${localWorkspaceFolder}/,target=/usr/src/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+    "source=nodemodules,target=/usr/src/${localWorkspaceFolderBasename}/node_modules",
+    "source=config,target=/root",
+    "source=userHome,target=/home/node",
+  ],
+  "extensions": [
+    "coenraads.bracket-pair-colorizer-2",
+    "oderwat.indent-rainbow",
+    "ms-azuretools.vscode-docker",
+    "dbaeumer.vscode-eslint"
+  ],
+  // Specifies a command that should be run after the container has been created.
+	"postCreateCommand": "sudo chmod -R 777 . && yarn install && cp -r /root/.ssh /home/node && chown node:node ~/.ssh/* && chmod 600 *",
+
+	// Comment out the next line to run as root instead.
+	"remoteUser": "node",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/ash"
+  },
+}

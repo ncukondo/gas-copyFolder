@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "esNEXT",
+    "module": "esNEXT",
+    "lib": ["esNEXT"],
+    "baseUrl": "./",
+    "paths": {
+      "#/*": ["src/*"]
+    }
+  }
+}
