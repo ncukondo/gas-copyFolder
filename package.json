@@ -1,10 +1,10 @@
 {
-  "name": "@ncukondo/clasp-typescript",
+  "name": "@ncukondo/gas-copyfolder",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "author": "Takeshi Kondo",
   "license": "MIT",
-  "homepage": "https://github.com/ncukondo/clasp-typescript",
+  "homepage": "https://github.com/ncukondo/gas-copyFolder",
   "scripts": {
     "lint:init": "npx eslint --init",
     "lint": "npx eslint --fix src/**/*.ts",
