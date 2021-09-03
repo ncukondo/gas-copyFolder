@@ -9,7 +9,6 @@ declare const HtmlService: GoogleAppsScript.HTML.HtmlService;
 declare const DriveApp: GoogleAppsScript.Drive.DriveApp;
 
 export function copyFolder(src: string, dist: string) {
-  console.log(`doCopyFolder: ${src} ${dist}`);
   doCopyFolder(src, dist);
 }
 
