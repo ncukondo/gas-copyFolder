@@ -1,4 +1,7 @@
-import { copyFolder as doCopyFolder } from "./copyFolder";
+import {
+  copyFolder as doCopyFolder,
+  cloneFolder as doCloneFolder,
+} from "./copyFolder";
 
 type Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
 declare const SpreadsheetApp: GoogleAppsScript.Spreadsheet.SpreadsheetApp;
@@ -17,18 +20,23 @@ const showIdInputDialog = (initialId = "") => {
   SpreadsheetApp.getUi().showModalDialog(html, "コピー元とコピー先を選択");
 };
 
-export function copyFolderByDialog() {
+const getFolderId = () => {
   const spreadsheetId = SpreadsheetApp.getActiveSpreadsheet().getId();
-  const folderId = DriveApp.getFileById(spreadsheetId)
-    .getParents()
-    .next()
-    .getId();
-  showIdInputDialog(folderId);
+  return DriveApp.getFileById(spreadsheetId).getParents().next().getId();
+};
+
+export function copyFolderByDialog() {
+  showIdInputDialog(getFolderId());
+}
+
+export function cloneFolder() {
+  doCloneFolder(getFolderId());
 }
 
 export function onOpen() {
   const menu = [
     { name: "フォルダーコピー", functionName: "copyFolderByDialog" },
+    { name: "フォルダー複製", functionName: "cloneFolder" },
   ];
-  SpreadsheetApp.getActiveSpreadsheet().addMenu("フォルダーコピー", menu);
+  SpreadsheetApp.getActiveSpreadsheet().addMenu("フォルダー操作", menu);
 }
