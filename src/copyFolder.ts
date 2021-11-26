@@ -1,4 +1,3 @@
-declare const DriveApp: GoogleAppsScript.Drive.DriveApp;
 type File = GoogleAppsScript.Drive.File;
 type Folder = GoogleAppsScript.Drive.Folder;
 

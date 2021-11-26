@@ -1,9 +1,11 @@
 FROM golang:1.14.13-alpine3.12 as builder
 ARG CLI_VERSION="trunk"
 ENV GH_CLI_VERSION="$CLI_VERSION"
-RUN apk update && apk add make git gcc libc-dev
-RUN git clone --depth 1 --branch $GH_CLI_VERSION https://github.com/cli/cli.git /go/src/gh-cli
-RUN cd /go/src/gh-cli && make
+RUN apk update && \
+    apk add make git gcc libc-dev && \
+    git clone --depth 1 --branch $GH_CLI_VERSION https://github.com/cli/cli.git /go/src/gh-cli && \
+    cd /go/src/gh-cli && \
+    make
 
 FROM node:15-alpine
 

@@ -4,9 +4,6 @@ import {
 } from "./copyFolder";
 
 type Spreadsheet = GoogleAppsScript.Spreadsheet.Spreadsheet;
-declare const SpreadsheetApp: GoogleAppsScript.Spreadsheet.SpreadsheetApp;
-declare const HtmlService: GoogleAppsScript.HTML.HtmlService;
-declare const DriveApp: GoogleAppsScript.Drive.DriveApp;
 
 export function copyFolder(src: string, dist: string) {
   doCopyFolder(src, dist);
@@ -32,8 +29,9 @@ export function cloneFolder() {
   doCloneFolder(getFolderId());
 }
 
+type SubMenu = { name: string; functionName: string }[];
 export function onOpen() {
-  const menu = [
+  const menu: SubMenu = [
     { name: "フォルダーコピー", functionName: "copyFolderByDialog" },
     { name: "フォルダー複製", functionName: "cloneFolder" },
   ];
