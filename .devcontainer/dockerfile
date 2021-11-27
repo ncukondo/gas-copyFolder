@@ -20,9 +20,6 @@ RUN set -ex; \
     echo "#!/bin/sh" >> /usr/bin/sudo &&\
     echo '/sbin/su-exec root "$@"' >> /usr/bin/sudo &&\
     chmod a+x /usr/bin/sudo
-# make directory for source code
-RUN mkdir -p /usr/src && \
-    chmod -R 777 /usr/src
 
 
 ENTRYPOINT ["/bin/sh"]
