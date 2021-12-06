@@ -10,6 +10,13 @@ const getShortcutTargetFile = (file: File) =>
   DriveApp.getFileById((file as any).getTargetId());
 
 const copyFolder = (from: string, to: string, newFolderName = "") => {
+  const shorcutFileList: {
+    shortcut: GoogleAppsScript.Drive.File;
+    target: GoogleAppsScript.Drive.File;
+    folder: GoogleAppsScript.Drive.Folder;
+  }[] = [];
+  const copiedFiles: { [key: string]: string } = {};
+
   const doCopyFolder = (
     src: string,
     dist: string,
@@ -23,8 +30,16 @@ const copyFolder = (from: string, to: string, newFolderName = "") => {
     const files = source.getFiles();
     while (files.hasNext()) {
       const f = files.next();
-      const file = isShortcut(f) ? getShortcutTargetFile(f) : f;
-      if (file) file.makeCopy(file.getName(), target);
+      if (isShortcut(f)) {
+        shorcutFileList.push({
+          shortcut: f,
+          target: getShortcutTargetFile(f),
+          folder: target,
+        });
+      } else {
+        const newFile = f?.makeCopy(f.getName(), target);
+        copiedFiles[f.getId()] = newFile.getId();
+      }
     }
 
     const folders = source.getFolders();
@@ -33,13 +48,22 @@ const copyFolder = (from: string, to: string, newFolderName = "") => {
       const f = folders.next();
       const folder = isShortcut(f) ? getShortcutTargetFolder(f) : f;
       const folderId = folder.getId();
-      // eslint-disable-next-line no-continue
-      if (folderIds.includes(folderId)) continue; // prevent loop by shortcut
-      folderIds.push(folderId);
-      doCopyFolder(folderId, target.getId(), "", folderIds);
+      // prevent loop by shortcut
+      if (!folderIds.includes(folderId)) {
+        folderIds.push(folderId);
+        doCopyFolder(folderId, target.getId(), "", folderIds);
+      }
     }
   };
   doCopyFolder(from, to, newFolderName, []);
+  shorcutFileList.forEach(({ shortcut, target, folder }) => {
+    if (target.getId() in copiedFiles) {
+      const newShortcut = shortcut.makeCopy(shortcut.getName(), folder);
+      (newShortcut as any).setTargetId(copiedFiles[target.getId()]);
+    } else {
+      target.makeCopy(target.getName(), folder);
+    }
+  });
 };
 
 const cloneFolder = (from: string, newFolderName = "") => {
