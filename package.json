@@ -1,6 +1,6 @@
 {
   "name": "@ncukondo/gas-copyfolder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "./dist/index.js",
   "author": "Takeshi Kondo",
   "license": "MIT",
@@ -17,12 +17,10 @@
     "build": "yarn lint && rimraf dist && rollup -c && yarn copy",
     "deploy": "yarn build && npx clasp push"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@jo12bar/rollup-plugin-hoist-entry-exports-to-global-scope": "^1.0.3",
-    "rollup": "^2.35.1",
     "@google/clasp": "^2.3.0",
+    "@jo12bar/rollup-plugin-hoist-entry-exports-to-global-scope": "^1.0.3",
     "@rollup/plugin-babel": "^5.2.2",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-node-resolve": "^11.0.1",
@@ -41,6 +39,7 @@
     "lodash.upperfirst": "^4.3.1",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "rollup": "^2.35.1",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.29.0",
     "ts-jest": "^26.2.0",
