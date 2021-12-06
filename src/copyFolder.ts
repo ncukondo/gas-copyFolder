@@ -1,19 +1,17 @@
 type File = GoogleAppsScript.Drive.File;
 type Folder = GoogleAppsScript.Drive.Folder;
 
-const isShortcut = (f: File | Folder) => (f as any).getTargetId() !== null;
-
-const getShortcutTargetFolder = (f: Folder) =>
-  DriveApp.getFolderById((f as any).getTargetId());
-
-const getShortcutTargetFile = (file: File) =>
-  DriveApp.getFileById((file as any).getTargetId());
+const isShortcut = (f: File) => (f as any).getTargetId() !== null;
+const getShortcutTargetId = (f: File): string => (f as any).getTargetId();
+const getFile = (id: string) => DriveApp.getFileById(id);
+const getFolder = (id: string) => DriveApp.getFolderById(id);
 
 const copyFolder = (from: string, to: string, newFolderName = "") => {
-  const shorcutFileList: {
-    shortcut: GoogleAppsScript.Drive.File;
-    target: GoogleAppsScript.Drive.File;
-    folder: GoogleAppsScript.Drive.Folder;
+  const shorcutList: {
+    id: string;
+    name: string;
+    target: string;
+    folder: string;
   }[] = [];
   const copiedFiles: { [key: string]: string } = {};
 
@@ -31,13 +29,14 @@ const copyFolder = (from: string, to: string, newFolderName = "") => {
     while (files.hasNext()) {
       const f = files.next();
       if (isShortcut(f)) {
-        shorcutFileList.push({
-          shortcut: f,
-          target: getShortcutTargetFile(f),
-          folder: target,
+        shorcutList.push({
+          id: f.getId(),
+          name: f.getName(),
+          target: getShortcutTargetId(f),
+          folder: target.getId(),
         });
       } else {
-        const newFile = f?.makeCopy(f.getName(), target);
+        const newFile = f.makeCopy(f.getName(), target);
         copiedFiles[f.getId()] = newFile.getId();
       }
     }
@@ -45,8 +44,7 @@ const copyFolder = (from: string, to: string, newFolderName = "") => {
     const folders = source.getFolders();
     folderIds.push(target.getId());
     while (folders.hasNext()) {
-      const f = folders.next();
-      const folder = isShortcut(f) ? getShortcutTargetFolder(f) : f;
+      const folder = folders.next();
       const folderId = folder.getId();
       // prevent loop by shortcut
       if (!folderIds.includes(folderId)) {
@@ -56,12 +54,12 @@ const copyFolder = (from: string, to: string, newFolderName = "") => {
     }
   };
   doCopyFolder(from, to, newFolderName, []);
-  shorcutFileList.forEach(({ shortcut, target, folder }) => {
-    if (target.getId() in copiedFiles) {
-      const newShortcut = shortcut.makeCopy(shortcut.getName(), folder);
-      (newShortcut as any).setTargetId(copiedFiles[target.getId()]);
+  shorcutList.forEach(({ id, target, folder, name }) => {
+    if (target in copiedFiles) {
+      const newShortcut = getFile(id).makeCopy(name, getFolder(folder));
+      (newShortcut as any).setTargetId(copiedFiles[target]);
     } else {
-      target.makeCopy(target.getName(), folder);
+      getFile(target).makeCopy(name, getFolder(folder));
     }
   });
 };
